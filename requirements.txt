@@ -3,3 +3,4 @@ Flask
 requests
 jsonify
 python-dotenv
+gunicorn
