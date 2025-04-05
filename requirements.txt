@@ -1,0 +1,7 @@
+google.generativeai
+Flask
+request
+jsonify
+send_file
+os
+dotenv 
