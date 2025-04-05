@@ -1,6 +1,6 @@
 google.generativeai
 Flask
-request
+requests
 jsonify
 send_file
 os
