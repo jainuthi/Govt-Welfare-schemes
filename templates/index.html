@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gemini Chatbot</title>
   <style>
     body {
@@ -11,8 +12,10 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
       background-color: #f4f4f9;
+      flex-direction: column;
+      overflow: auto; /* Allow scrolling */
     }
 
     .container {
@@ -21,7 +24,11 @@
       padding: 30px;
       border-radius: 10px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      width: 500px;
+      width: 100%;
+      max-width: 500px;
+      box-sizing: border-box;
+      margin-top: 20px; /* Add some spacing from the top */
+      flex-grow: 1; /* Allow it to take up space but also scroll if necessary */
     }
 
     h2 {
@@ -34,12 +41,13 @@
     }
 
     input[type="text"] {
-      width: 80%;
+      width: 100%;
       padding: 10px;
       margin-bottom: 20px;
       border: 1px solid #ccc;
       border-radius: 5px;
       font-size: 16px;
+      box-sizing: border-box;
     }
 
     input[type="submit"] {
@@ -55,7 +63,7 @@
     input[type="submit"]:hover {
       background-color: #45a049;
     }
-
+    
     .response {
       margin-top: 20px;
       background-color: #f1f1f1;
@@ -70,6 +78,23 @@
     .response b {
       font-weight: bold;
       color: #2d87f0;
+    }
+
+    /* Media Query for smaller screens */
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+
+      .container {
+        padding: 20px;
+        width: 100%;
+      }
+
+      input[type="text"], input[type="submit"] {
+        width: 100%;
+        font-size: 14px;
+      }
     }
   </style>
 </head>
@@ -87,7 +112,7 @@
 
     {% if reply %}
     <div class="response">
-      <strong>Reply:</strong><br><br>
+      <strong>Response:</strong><br><br>
       {{ reply | safe }}
     </div>
     {% endif %}
@@ -95,3 +120,4 @@
 
 </body>
 </html>
+
