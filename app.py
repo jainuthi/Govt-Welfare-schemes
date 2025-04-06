@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_file, render_template 
+from flask import Flask, request, jsonify, render_template 
 import os
 import google.generativeai as genai 
 from dotenv import load_dotenv
@@ -17,10 +17,9 @@ def chat():
     prompt = request.form.get("prompt") or request.json.get("prompt")
     if not prompt:
         return jsonify({"error": "Missing 'prompt' in request"}), 400
-
+    
     reply = get_responses(prompt, schemes)
     reply = format_reply(reply) 
-    # If coming from the HTML form, render back the response 
     if request.form: 
         return render_template("index.html", reply=reply)
 
@@ -197,22 +196,23 @@ additional_schemes = [
 schemes = schemes + additional_schemes 
 api_key = os.getenv("api_key") 
 genai.configure(api_key=api_key) 
-
-chat_history = []  # To store (prompt, response) pairs
+chat_history = [] 
 
 def get_responses(prompt, data):
-    # Add past history into the conversation 
+    # Add past history into the conversation
     history_text = ""
     for idx, (old_prompt, old_response) in enumerate(chat_history, 1):
-        history_text += f"\n[Query {idx}]: {old_prompt}\n[Response {idx}]: {old_response}\n" 
+        history_text += f"\n[Query {idx}]: {old_prompt}\n[Response {idx}]: {old_response}\n"
     
 
     formatted_prompt = f"""
 You are an assistant that reads a list of Indian government schemes and answers user queries.
-Below is the conversation history followed by the current user query.
-- Provide concise yet informative.
+- Response must be short yet informative.
+- Provide the information in point format(1,2,3...) without using bold formatting. (only if he ask any query).
 - If prompt needs external sources, ask them to look in 'Scheme Portal'.
 - At the end, ask if they have any further queries.
+
+Below is the conversation history followed by the current user query.
 {history_text}
 
 User's Prompt: {prompt}
@@ -231,13 +231,15 @@ Data: {data}
 
 def format_reply(text): 
     import re
-
+    
     for scheme in schemes:
-        text = re.sub(scheme, f"<b>{scheme}</b>", text)
-
-    text = re.sub(r'\.\s*', '.<br><br>', text)
-
+        # Use re.sub to replace the scheme text with bold tags
+        text = re.sub(rf"({re.escape(scheme)})", r"<b>\1</b>", text)
+        
+    # Add additional formatting or customizations if necessary
+    text = f"<div class='response-container'>{text}</div>"
     return text
+
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)
