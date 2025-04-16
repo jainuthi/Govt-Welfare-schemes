@@ -1,1 +1,1 @@
-An AI-powered chatbot fine-tuned to provide accurate and accessible information about various government welfare schemes in India. This project aims to assist citizens by simplifying the process of discovering relevant schemes based on their needs and eligibility.
+
